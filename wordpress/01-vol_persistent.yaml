@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-wp
+  labels:
+    name: nfs-wp # name can be anything
+spec:
+  storageClassName: manual-wp # same storage class as pvc
+  persistentVolumeReclaimPolicy: Recycle
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 192.168.200.23
+    path: "/vol_containers/wp"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wordpress-data
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: manual-wp
+  resources:
+    requests:
+      storage: 2Gi
+

@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: phpmyadmin-service
+spec:
+  selector:
+    app: phpmyadmin
+  ports:
+  - protocol: TCP
+    name: web
+    port: 80
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: myadminroute
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`k8szf.local`)
+    kind: Rule
+    services:
+    - name: phpmyadmin-service
+      port: 80
+

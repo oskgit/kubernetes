@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pshop
+  labels:
+    name: nfs-pshop # name can be anything
+spec:
+  storageClassName: manual-pshop # same storage class as pvc
+  persistentVolumeReclaimPolicy: Recycle
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 192.168.200.23
+    path: "/vol_containers/pshop"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pshop-data
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: manual-pshop
+  resources:
+    requests:
+      storage: 3Gi
+

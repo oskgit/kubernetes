@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prestashop-deployment
+  labels:
+    app: prestashop
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: prestashop
+      tier: frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: prestashop
+        tier: frontend
+    spec:
+      containers:
+      - image: prestashop/prestashop
+        name: prestashop
+        env:
+        - name: PS_DEV_MODE
+          value: "0"
+        - name: DB_SERVER
+          value: mysql-service
+        - name: DB_USER
+          value: root
+        - name: DB_PASSWD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secrets
+              key: ROOT_PASSWORD
+        - name: DB_PREFIX
+          value: ps_
+        - name: DB_NAME
+          value: ps17
+       # - name: PS_INSTALL_AUTO
+       #   value: "1"
+        - name: DB_ERASE_DB
+          value: "0"
+        - name: PS_DOMAIN
+          value: shop.k8szf.local
+        - name: PS_LAGUAGE
+          value: ES
+        - name: PS_COUNTRY
+          value: ES
+        - name: PS_ALL_LANGUAGES
+          value: "0"
+        - name: ADMIN_MAIL
+          value: info@zfsoluciones.net
+        - name: ADMIN_PASSWD
+          valueFrom:
+            secretKeyRef:
+              name: pshop-secrets
+              key: admin_passwd
+        ports:
+        - containerPort: 80
+          name: prestashop
+        volumeMounts:
+        - name: prestashop-pvc
+          mountPath: /var/www/html
+      volumes:
+      - name: prestashop-pvc
+        persistentVolumeClaim:
+          claimName: pshop-data

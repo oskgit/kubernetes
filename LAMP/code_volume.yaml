@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: code
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: manual-var
+  resources:
+    requests:
+      storage: 1Gi
+

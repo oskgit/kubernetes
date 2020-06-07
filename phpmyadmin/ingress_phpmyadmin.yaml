@@ -1,0 +1,14 @@
+apiVersion: traefik.containo.us/v1alpha1  
+kind: IngressRoute  
+metadata:  
+  name: simpleingressroute
+  namespace: default
+spec:  
+  entryPoints:
+    - web
+  routes:
+  - match: Host('k8szf.local')
+    kind: Rule
+    services:
+    - name: phpmyadmin-service
+      port: 80
